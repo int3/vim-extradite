@@ -1,3 +1,7 @@
+if !exists('g:extradite_width')
+    let g:extradite_width = 60
+endif
+
 command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
 autocmd Syntax extradite call s:ExtraditeSyntax()
@@ -28,16 +32,16 @@ function! s:Extradite(bang) abort
     let b:git_dir = git_dir
     let b:fugitive_type = 'log'
     let b:fugitive_logged_bufnr = bufnr
-    vertical resize 60
+    exe 'vertical resize '.g:extradite_width
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     " invoke ExtraditeClose instead of bdelete so we can do the necessary cleanup
     nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
     nnoremap <buffer> <silent> <CR> :<C-U>exe <SID>ExtraditeJump("edit")<CR>
-    nnoremap <buffer> <silent> o    :<C-U>exe <SID>ExtraditeJump((&splitbelow ? "botright" : "topleft")." split")<CR>
-    nnoremap <buffer> <silent> O    :<C-U>exe <SID>ExtraditeJump("tabedit")<CR>
-    nnoremap <buffer> <silent> d    :<C-U>exe <SID>ExtraditeDiff(0)<CR>
-    nnoremap <buffer> <silent> D    :<C-U>exe <SID>ExtraditeDiff(1)<CR>
-    nnoremap <buffer> <silent> a    :<C-U>exe <SID>ExtraditeLoadCommitData(0, b:base_file_name, ['--no-pager','log','-n100'])<CR>
+    nnoremap <buffer> <silent> ov   :<C-U>exe <SID>ExtraditeJump((&splitbelow ? "botright" : "topleft")." vsplit")<CR>
+    nnoremap <buffer> <silent> oh   :<C-U>exe <SID>ExtraditeJump((&splitbelow ? "botright" : "topleft")." split")<CR>
+    nnoremap <buffer> <silent> ot   :<C-U>exe <SID>ExtraditeJump("tabedit")<CR>
+    nnoremap <buffer> <silent> dv   :<C-U>exe <SID>ExtraditeDiff(0)<CR>
+    nnoremap <buffer> <silent> dh   :<C-U>exe <SID>ExtraditeDiff(1)<CR>
     " hack to make the cursor stay in the same position. putting line= in ExtraditeDiffToggle / removing <C-U>
     " doesn't seem to work
     nnoremap <buffer> <silent> t    :let line=line('.')<cr> :<C-U>exe <SID>ExtraditeDiffToggle()<CR> :exe line<cr>
@@ -137,12 +141,17 @@ endfunction
 
 function! s:ExtraditeJump(cmd) abort
   let rev = s:ExtraditeClose()
-  exe s:Edit(a:cmd,rev)
+  if a:cmd == 'tabedit'
+      exe ':Gtabedit '.rev
+  else
+      exe a:cmd
+      exe ':Gedit '.rev
+  endif
 endfunction
 
 function! s:ExtraditeDiff(bang) abort
   let rev = s:ExtraditeClose()
-  call s:Diff(a:bang,rev)
+  exe ':Gdiff'.(a:bang ? '!' : '').' '.rev
 endfunction
 
 function! s:ExtraditeSyntax() abort
@@ -164,7 +173,6 @@ function! s:ExtraditeDiffToggle() abort
       " around periodically helps vim figure out where it should really be.
       autocmd CursorHold <buffer>  normal! lh
     augroup END
-    call s:SimpleFileDiff(s:ExtraditePath('~1'), s:ExtraditePath())
   else
     exe "bd" b:fugitive_simplediff_bufnr
     unlet b:fugitive_simplediff_bufnr
