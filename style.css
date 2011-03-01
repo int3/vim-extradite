@@ -14,7 +14,7 @@ h2 { font-size: 20px; font-weight: normal; margin: 15px 0; font-family: 'Georgia
     width: 414px;
     margin: 0 0 0 10px;
 }
-span.code { background: #efefef; border: solid 1px #ccc; font-family: Inconsolata, Consolas, monospace; display:inline-block;}
+span.code { background: #efefef; border: solid 1px #ccc; font-family: Inconsolata, Consolas, monospace; display:inline-block; font-style:normal;}
 ul.normal li { margin: 10px 0; }
 
 p { padding-top: 0; margin-top: 0; }
