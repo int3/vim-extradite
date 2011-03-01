@@ -20,7 +20,7 @@ let g:extradite_bufnr = -1
 function! s:Extradite(bang) abort
 
   if !exists('b:git_dir')
-    echo 'Not a git repository.'
+    echo 'Current buffer is not under git version control.'
     return
   endif
 

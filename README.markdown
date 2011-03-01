@@ -6,6 +6,8 @@ A git commit browser / git log wrapper that extends fugitive.vim.
 default, it opens in the current window. Adding |!| makes it open in a vertical
 split instead. The width of the split is set with `g:extradite_width`.
 
+Note: `:Extradite` only runs if the current file is under git version control!
+
 Once we are in the Extradite buffer, the following keymaps are available:
 
 `<CR>` edits the revision on the current line in a fugitive-buffer.
