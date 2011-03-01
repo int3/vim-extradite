@@ -1,3 +1,13 @@
+" extradite.vim -- a git browser plugin that extends fugitive.vim
+" Maintainer: Jezreel Ng <jezreel@gmail.com>
+" Version: 1.0
+" License: This file is placed in the public domain.
+
+if exists('g:loaded_extradite')
+    finish
+endif
+let g:loaded_extradite = 1
+
 if !exists('g:extradite_width')
     let g:extradite_width = 60
 endif
