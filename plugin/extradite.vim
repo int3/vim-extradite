@@ -98,7 +98,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     let tokens = matchlist(line, '\([^\t]\+\)\t\([^\t]\+\)')
     call add(b:extradata_list, {'commit': tokens[1], 'date': tokens[2]})
   endfor
-  setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted
+  setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
 endfunction
 
 " Returns the `commit:path` associated with the current line in the Extradite buffer
