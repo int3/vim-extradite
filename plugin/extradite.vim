@@ -12,7 +12,7 @@ if !exists('g:extradite_width')
     let g:extradite_width = 60
 endif
 
-command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
+autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
 autocmd Syntax extradite call s:ExtraditeSyntax()
 let g:extradite_bufnr = -1
