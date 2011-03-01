@@ -19,7 +19,7 @@ let g:extradite_bufnr = -1
 
 function! s:Extradite(bang) abort
 
-  if !exists('b:git_dir')
+  if fugitive#buffer().path() == ''
     echo 'Current buffer is not under git version control.'
     return
   endif
