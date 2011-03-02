@@ -40,8 +40,7 @@ function! s:Extradite(bang) abort
     call s:ExtraditeLoadCommitData(a:bang, base_file_name, template_cmd, path)
     let b:base_file_name = base_file_name
     let b:git_dir = git_dir
-    let b:fugitive_type = 'log'
-    let b:fugitive_logged_bufnr = bufnr
+    let b:extraditelogged_bufnr = bufnr
     exe 'vertical resize '.g:extradite_width
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     " invoke ExtraditeClose instead of bdelete so we can do the necessary cleanup
@@ -88,7 +87,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     silent! execute '%write !'.basecmd.' > '.log_file.' 2> '.a:base_file_name
   endif
   if v:shell_error
-    call s:throw(join(readfile(error),"\n"))
+    call s:throw(join(readfile(a:base_file_name),"\n"))
   endif
 
   if g:extradite_bufnr >= 0
@@ -122,7 +121,7 @@ function! s:ExtraditePath(...) abort
   else
     let modifier = ''
   endif
-  return b:extradata_list[line(".")-1]['commit'].modifier.':'.fugitive#buffer(b:fugitive_logged_bufnr).path()
+  return b:extradata_list[line(".")-1]['commit'].modifier.':'.fugitive#buffer(b:extraditelogged_bufnr).path()
 endfunction
 
 " Closes the file log and returns the selected `commit:path`
@@ -136,12 +135,12 @@ function! s:ExtraditeClose() abort
   endif
 
   let rev = s:ExtraditePath()
-  let fugitive_logged_bufnr = b:fugitive_logged_bufnr
-  if exists('b:fugitive_simplediff_bufnr') && bufwinnr(b:fugitive_simplediff_bufnr) >= 0
-    exe 'bd!' . b:fugitive_simplediff_bufnr
+  let extraditelogged_bufnr = b:extraditelogged_bufnr
+  if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
+    exe 'bd!' . b:extradite_simplediff_bufnr
   endif
   bd
-  let logged_winnr = bufwinnr(fugitive_logged_bufnr)
+  let logged_winnr = bufwinnr(extraditelogged_bufnr)
   if logged_winnr >= 0
     exe logged_winnr.'wincmd w'
   endif
@@ -176,7 +175,7 @@ function! s:ExtraditeSyntax() abort
 endfunction
 
 function! s:ExtraditeDiffToggle() abort
-  if !exists('b:fugitive_simplediff_bufnr') || b:fugitive_simplediff_bufnr == -1
+  if !exists('b:extraditesimplediff_bufnr') || b:extraditesimplediff_bufnr == -1
     augroup extradite
       autocmd CursorMoved <buffer> call s:SimpleFileDiff(s:ExtraditePath('~1'), s:ExtraditePath())
       " vim seems to get confused if we jump around buffers during a CursorMoved event. Moving the cursor
@@ -184,8 +183,8 @@ function! s:ExtraditeDiffToggle() abort
       autocmd CursorHold <buffer>  normal! lh
     augroup END
   else
-    exe "bd" b:fugitive_simplediff_bufnr
-    unlet b:fugitive_simplediff_bufnr
+    exe "bd" b:extraditesimplediff_bufnr
+    unlet b:extraditesimplediff_bufnr
     au! extradite
   endif
 endfunction
@@ -194,7 +193,7 @@ endfunction
 " information
 function! s:SimpleFileDiff(a,b) abort
   call s:SimpleDiff(a:a,a:b)
-  let win = bufwinnr(b:fugitive_simplediff_bufnr)
+  let win = bufwinnr(b:extraditesimplediff_bufnr)
   exe win.'wincmd w'
   set modifiable
     silent normal! gg5dd
@@ -206,15 +205,15 @@ endfunction
 " unique wrt the buffer that it is invoked from.
 function! s:SimpleDiff(a,b) abort
 
-  if !exists('b:fugitive_simplediff_bufnr') || b:fugitive_simplediff_bufnr == -1
+  if !exists('b:extraditesimplediff_bufnr') || b:extraditesimplediff_bufnr == -1
     belowright split
     enew!
     let bufnr = bufnr('')
     wincmd p
-    let b:fugitive_simplediff_bufnr = bufnr
+    let b:extraditesimplediff_bufnr = bufnr
   endif
 
-  let win = bufwinnr(b:fugitive_simplediff_bufnr)
+  let win = bufwinnr(b:extraditesimplediff_bufnr)
   exe win.'wincmd w'
 
   " check if we have generated this diff already, to reduce unnecessary shell requests
