@@ -2,8 +2,13 @@
 <html>
 <head>
     <title>extradite.vim: a git commit browser</title>
-    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'13f72b76-f4a5-4100-b805-df3e46fc5992',tracking:'google'});</script>
     <link rel='stylesheet' href='style.css' type='text/css' />
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'13f72b76-f4a5-4100-b805-df3e46fc5992',tracking:'google'});</script>
+    <script type='text/javascript'>document.addEventListener('DOMContentLoaded', function() {
+            mpmetrics.track('Visited');
+            document.getElementById('download').addEventListener('click',function(){mpmetrics.track('Download');})
+        });
+    </script>
 </head>
 <body>
     <div class='box'><div class='column'><div class='column_redux'>
@@ -33,7 +38,7 @@
             </p>
             <p>Do <span class='code'>:help Extradite</span> for more info, or take a look at the <a href='https://github.com/int3/vim-extradite#readme'>README</a>.</p>
 
-            <a href="https://github.com/int3/vim-extradite/zipball/master"><div class='download drop-shadow curved curved-hz-1'>Download</div></a>
+            <a href="https://github.com/int3/vim-extradite/zipball/master" id='download'><div class='download drop-shadow curved curved-hz-1'>Download</div></a>
 
             <div class='note'>Note: fugitive.vim <u>must</u> be installed! Also,
             <span class='code'>:Extradite</span> will only run on files that are under version control.</div>
@@ -44,5 +49,6 @@
             </div>
         </div>
     </div> </div></div>
+    <script type='text/javascript'> var mp_protocol = (('https:' == document.location.protocol) ? 'https://' : 'http://'); document.write(unescape('%3Cscript src="' + mp_protocol + 'api.mixpanel.com/site_media/js/api/mixpanel.js" type="text/javascript"%3E%3C/script%3E')); </script> <script type='text/javascript'> try {  var mpmetrics = new MixpanelLib('502db8bb8774f04be3147ffbeaa453c4'); } catch(err) { null_fn = function () {}; var mpmetrics = {  track: null_fn,  track_funnel: null_fn,  register: null_fn,  register_once: null_fn, register_funnel: null_fn }; } </script>
 </body>
 </html>
