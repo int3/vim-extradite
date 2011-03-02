@@ -39,7 +39,7 @@ t                       Toggle the visibility of the file diff buffer.
                                                 *extradite-q*
 q                       Close the Extradite buffer.
 
-ABOUT                                           *fugitive-about*
+ABOUT                                           *extradite-about*
 
 Grab the latest version or report a bug on GitHub:
 
