@@ -58,7 +58,7 @@ function! s:Extradite(bang) abort
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
     return ''
-  catch /^fugitive:/
+  catch /^extradite:/
     return 'echoerr v:errmsg'
   endtry
 endfunction
@@ -71,23 +71,21 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   endif
 
   let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
-  let extradata_cmd = a:template_cmd + ['--pretty=format:\%h	\%ad', '--', path]
   let basecmd = call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo())
+  let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
   let extradata_basecmd = call(fugitive#buffer().repo().git_command,extradata_cmd,fugitive#buffer().repo())
 
   let log_file = a:base_file_name.'.extradite'
   " put the commit IDs in a separate file -- the user doesn't have to know
   " exactly what they are
-  let extradata_file = a:base_file_name.'.extraditecommits'
   if &shell =~# 'csh'
-    silent! execute '%write !('.extradata_basecmd.' > '.extradata_file.') >& '.a:base_file_name
     silent! execute '%write !('.basecmd.' > '.log_file.') >& '.a:base_file_name
   else
-    silent! execute '%write !'.extradata_basecmd.' > '.extradata_file.' 2> '.a:base_file_name
     silent! execute '%write !'.basecmd.' > '.log_file.' 2> '.a:base_file_name
   endif
   if v:shell_error
-    call s:throw(join(readfile(a:base_file_name),"\n"))
+    let v:errmsg = 'extradite: '.join(readfile(a:base_file_name),"\n")
+    throw v:errmsg
   endif
 
   if g:extradite_bufnr >= 0
@@ -100,17 +98,21 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     endif
   endif
 
+  " this must happen after we create the Extradite buffer so that
+  " b:extradata_list gets placed in the right buffer
+  let extradata_str = system(extradata_basecmd)
+  let extradata = split(extradata_str, '\n')
+  let b:extradata_list = []
+  for line in extradata
+    let tokens = matchlist(line, '\([^\t]\+\)\t\([^\t]\+\)')
+    call add(b:extradata_list, {'commit': tokens[1], 'date': tokens[2]})
+  endfor
+
   " Some components of the log may have no value. Or may insert whitespace of their own. Remove the repeated
   " whitespace that result from this. Side effect: removes intended whitespace in the commit data.
   setlocal modifiable
   silent! %s/\(\s\)\s\+/\1/g
   normal! gg
-  let b:extradata_list = []
-  let extradata = readfile(extradata_file)
-  for line in extradata
-    let tokens = matchlist(line, '\([^\t]\+\)\t\([^\t]\+\)')
-    call add(b:extradata_list, {'commit': tokens[1], 'date': tokens[2]})
-  endfor
   setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
 endfunction
 
