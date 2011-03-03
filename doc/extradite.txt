@@ -12,7 +12,7 @@ fugitive.vim must be installed as well.
 COMMANDS                                        *extradite-commands*
 
                                                 *extradite-:Extradite*
-:Extradite              Launch the Extradite buffer. By default, it opens in the
+:Extradite              Toggle the Extradite buffer. By default, it opens in the
                         current window. Adding |!| makes it open in a vertical
                         split instead. The width of the split is set with
                         *g:extradite_width*
