@@ -234,3 +234,5 @@ function! s:SimpleDiff(a,b) abort
   wincmd p
 
 endfunction
+
+" vim:set ft=vim ts=8 sw=2 sts=2 et
