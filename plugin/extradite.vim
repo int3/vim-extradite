@@ -111,8 +111,8 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   " Some components of the log may have no value. Or may insert whitespace of their own. Remove the repeated
   " whitespace that result from this. Side effect: removes intended whitespace in the commit data.
   setlocal modifiable
-  silent! %s/\(\s\)\s\+/\1/g
-  normal! gg
+    silent! %s/\(\s\)\s\+/\1/g
+    normal! gg
   setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
 endfunction
 
@@ -197,9 +197,9 @@ function! s:SimpleFileDiff(a,b) abort
   call s:SimpleDiff(a:a,a:b)
   let win = bufwinnr(b:extradite_simplediff_bufnr)
   exe win.'wincmd w'
-  set modifiable
+  setlocal modifiable
     silent normal! gg5dd
-  set nomodifiable
+  setlocal nomodifiable
   wincmd p
 endfunction
 
@@ -224,13 +224,12 @@ function! s:SimpleDiff(a,b) abort
     return
   endif
 
-  set modifiable
+  setlocal modifiable
     silent! %delete _
     let diff = system('git diff '.a:a.' '.a:b)
     silent put = diff
   setlocal ft=diff buftype=nofile nomodifiable
-  " somehow this is necessary to prevent future buffers from having `nomodifiable`
-  autocmd BufDelete <buffer> set modifiable
+
   let b:files = { 'a': a:a, 'b': a:b }
   wincmd p
 
