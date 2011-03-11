@@ -19,11 +19,6 @@ let g:extradite_bufnr = -1
 
 function! s:Extradite(bang) abort
 
-  if fugitive#buffer().path() == ''
-    echo 'Current buffer is not under git version control.'
-    return
-  endif
-
   " if we are open, close.
   if g:extradite_bufnr >= 0
     call <SID>ExtraditeClose()
