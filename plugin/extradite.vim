@@ -50,6 +50,13 @@ function! s:Extradite(bang) abort
     " doesn't seem to work
     nnoremap <buffer> <silent> t    :let line=line('.')<cr> :<C-U>exe <SID>ExtraditeDiffToggle()<CR> :exe line<cr>
     autocmd CursorMoved <buffer>    exe 'setlocal statusline='.escape(b:extradata_list[line(".")-1]['date'], ' ')
+    " cd to git repo so system() calls to git work
+    let b:cd = exists('*haslocaldir') && haslocaldir() ? 'lcd ' : 'cd '
+    let b:stashed_dir = getcwd()
+    let b:git_dir = fugitive#buffer().repo().tree()
+    execute b:cd.' '.b:git_dir
+    autocmd BufEnter <buffer>       exe b:cd.' '.b:git_dir
+    autocmd BufLeave <buffer>       exe b:cd.' '.getbufvar('<afile>','stashed_dir')
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
     return ''
