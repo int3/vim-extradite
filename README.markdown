@@ -21,3 +21,7 @@ cursor in a new horizontal split / vertical split / tab respectively.
 `t` toggles the visibility of the file diff buffer.
 
 `q` closes the Extradite buffer.
+
+This plugin can also be obtained from [vim.org][1].
+
+[1]:http://www.vim.org/scripts/script.php?script_id=3509
