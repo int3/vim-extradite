@@ -205,7 +205,10 @@ function! s:SimpleDiff(a,b) abort
   if !exists('b:extradite_simplediff_bufnr') || b:extradite_simplediff_bufnr == -1
     belowright split
     enew!
+    command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
+    nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
     let bufnr = bufnr('')
+
     keepjumps wincmd p
     let b:extradite_simplediff_bufnr = bufnr
   endif
