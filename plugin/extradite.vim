@@ -162,13 +162,13 @@ endfunction
 
 function! s:ExtraditeSyntax() abort
   let b:current_syntax = 'extradite'
-  syn match FugitivelogName "\(\w\| \)\+\t"
-  syn match FugitivelogTag "(.*)\t"
-  hi def link FugitivelogName       String
-  hi def link FugitivelogTag        Identifier
-  hi! def link CursorLine           Visual
+  syn match ExtraditeLogName "\(\w\| \)\+\t"
+  syn match ExtraditeLogTag "(.*)\t"
+  hi def link ExtraditeLogName String
+  hi def link ExtraditeLogTag Identifier
+  hi! link CursorLine           Visual
   " make the cursor less obvious. has no effect on xterm
-  hi! def link Cursor               Visual
+  hi! link Cursor               Visual
 endfunction
 
 function! s:ExtraditeDiffToggle() abort
