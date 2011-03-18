@@ -87,9 +87,9 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     edit
   else
     if a:bang
-      exe 'leftabove vsplit '.log_file
+      exe 'keepjumps leftabove vsplit '.log_file
     else
-      exe 'edit' log_file
+      exe 'keepjumps edit' log_file
     endif
   endif
 
@@ -106,8 +106,8 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   " Some components of the log may have no value. Or may insert whitespace of their own. Remove the repeated
   " whitespace that result from this. Side effect: removes intended whitespace in the commit data.
   setlocal modifiable
-    silent! %s/\(\s\)\s\+/\1/g
-    normal! gg
+    silent! keepjumps %s/\(\s\)\s\+/\1/g
+    keepjumps normal! gg
   setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
 endfunction
 
@@ -126,7 +126,7 @@ function! s:ExtraditeClose() abort
 
   if (g:extradite_bufnr >= 0)
     let filelog_winnr = bufwinnr(g:extradite_bufnr)
-    exe filelog_winnr.'wincmd w'
+    exe 'keepjumps '.filelog_winnr.'wincmd w'
   else
     return
   endif
@@ -134,12 +134,12 @@ function! s:ExtraditeClose() abort
   let rev = s:ExtraditePath()
   let extradite_logged_bufnr = b:extradite_logged_bufnr
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
-    exe 'bd!' . b:extradite_simplediff_bufnr
+    exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
-  bd
+  keepjumps bd
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
-    exe logged_winnr.'wincmd w'
+    exe 'keepjumps '.logged_winnr.'wincmd w'
   endif
   let g:extradite_bufnr = -1
   return rev
@@ -180,7 +180,7 @@ function! s:ExtraditeDiffToggle() abort
       autocmd CursorHold <buffer>  normal! lh
     augroup END
   else
-    exe "bd" b:extradite_simplediff_bufnr
+    exe "keepjumps bd" b:extradite_simplediff_bufnr
     unlet b:extradite_simplediff_bufnr
     au! extradite
   endif
@@ -191,11 +191,11 @@ endfunction
 function! s:SimpleFileDiff(a,b) abort
   call s:SimpleDiff(a:a,a:b)
   let win = bufwinnr(b:extradite_simplediff_bufnr)
-  exe win.'wincmd w'
+  exe 'keepjumps '.win.'wincmd w'
   setlocal modifiable
-    silent normal! gg5dd
+    keepjumps silent normal! gg5dd
   setlocal nomodifiable
-  wincmd p
+  keepjumps wincmd p
 endfunction
 
 " Does a git diff of commits a and b. Will create one simplediff-buffer that is
@@ -206,16 +206,16 @@ function! s:SimpleDiff(a,b) abort
     belowright split
     enew!
     let bufnr = bufnr('')
-    wincmd p
+    keepjumps wincmd p
     let b:extradite_simplediff_bufnr = bufnr
   endif
 
   let win = bufwinnr(b:extradite_simplediff_bufnr)
-  exe win.'wincmd w'
+  exe 'keepjumps '.win.'wincmd w'
 
   " check if we have generated this diff already, to reduce unnecessary shell requests
   if exists('b:files') && b:files['a'] == a:a && b:files['b'] == a:b
-    wincmd p
+    keepjumps wincmd p
     return
   endif
 
@@ -226,7 +226,7 @@ function! s:SimpleDiff(a,b) abort
   setlocal ft=diff buftype=nofile nomodifiable
 
   let b:files = { 'a': a:a, 'b': a:b }
-  wincmd p
+  keepjumps wincmd p
 
 endfunction
 
