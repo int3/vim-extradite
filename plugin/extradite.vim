@@ -53,9 +53,9 @@ function! s:Extradite(bang) abort
     " cd to git repo so system() calls to git work
     let b:cd = exists('*haslocaldir') && haslocaldir() ? 'lcd ' : 'cd '
     let b:stashed_dir = getcwd()
-    let b:git_dir = fugitive#buffer().repo().tree()
-    execute b:cd.' '.b:git_dir
-    autocmd BufEnter <buffer>       exe b:cd.' '.b:git_dir
+    let b:git_tree_dir = fugitive#buffer().repo().tree()
+    execute b:cd.' '.b:git_tree_dir
+    autocmd BufEnter <buffer>       exe b:cd.' '.b:git_tree_dir
     autocmd BufLeave <buffer>       exe b:cd.' '.getbufvar('<afile>','stashed_dir')
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
