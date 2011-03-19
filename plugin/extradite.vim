@@ -27,14 +27,12 @@ function! s:Extradite(bang) abort
 
   let path = fugitive#buffer().path()
   try
-    let git_dir = fugitive#buffer().repo().dir()
     " insert literal tabs in the format string because git does not seem to provide an escape code for it
     let template_cmd = ['--no-pager', 'log', '-n100']
     let bufnr = bufnr('')
     let base_file_name = tempname()
     call s:ExtraditeLoadCommitData(a:bang, base_file_name, template_cmd, path)
     let b:base_file_name = base_file_name
-    let b:git_dir = git_dir
     let b:extradite_logged_bufnr = bufnr
     exe 'vertical resize '.g:extradite_width
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
