@@ -57,6 +57,9 @@ function! s:Extradite(bang) abort
     execute b:cd.' '.b:git_tree_dir
     autocmd BufEnter <buffer>       exe b:cd.' '.b:git_tree_dir
     autocmd BufLeave <buffer>       exe b:cd.' '.getbufvar('<afile>','stashed_dir')
+    autocmd BufEnter <buffer>       call s:ExtraditeSyntax()
+    autocmd BufLeave <buffer>       hi! link CursorLine NONE
+    autocmd BufLeave <buffer>       hi! link Cursor NONE
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
     return ''
