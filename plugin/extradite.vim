@@ -52,6 +52,8 @@ function! s:Extradite(bang) abort
     autocmd CursorMoved <buffer>    exe 'setlocal statusline='.escape(b:extradata_list[line(".")-1]['date'], ' ')
     " cd to git repo so system() calls to git work
     let b:cd = exists('*haslocaldir') && haslocaldir() ? 'lcd ' : 'cd '
+    let b:stashed_autochdir = &autochdir
+    set noautochdir
     let b:stashed_dir = getcwd()
     let b:git_tree_dir = fugitive#buffer().repo().tree()
     execute b:cd.' '.b:git_tree_dir
@@ -146,6 +148,7 @@ function! s:ExtraditeClose() abort
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
     exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
+  exe 'set '.(b:stashed_autochdir ? '' : 'no').'autochdir'
   keepjumps bd
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
