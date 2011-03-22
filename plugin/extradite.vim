@@ -77,7 +77,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     let path = ''
   endif
 
-  let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
+  let cmd = a:template_cmd + ['--pretty=format:\%h	\%an	\%d	\%s', '--', path]
   let basecmd = call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo())
   let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
   let extradata_basecmd = call(fugitive#buffer().repo().git_command,extradata_cmd,fugitive#buffer().repo())
@@ -175,9 +175,11 @@ endfunction
 
 function! s:ExtraditeSyntax() abort
   let b:current_syntax = 'extradite'
-  syn match ExtraditeLogName "\(\w\| \)\+\t"
+  syn match ExtraditeLogId "^\(\w\)\+"
+  syn match ExtraditeLogName "\t\(\w\| \)\+\t"
   syn match ExtraditeLogTag "(.*)\t"
   hi def link ExtraditeLogName String
+  hi def link ExtraditeLogId Comment
   hi def link ExtraditeLogTag Identifier
   hi! link CursorLine           Visual
   " make the cursor less obvious. has no effect on xterm
