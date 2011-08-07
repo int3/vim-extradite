@@ -256,6 +256,7 @@ function! s:SimpleDiff(a,b) abort
   setlocal ft=diff buftype=nofile nomodifiable
 
   let b:files = { 'a': a:a, 'b': a:b }
+  normal! zR
   keepjumps wincmd p
 
 endfunction
