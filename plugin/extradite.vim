@@ -12,6 +12,10 @@ if !exists('g:extradite_width')
     let g:extradite_width = 60
 endif
 
+if !exists('g:extradite_showhash')
+    let g:extradite_showhash = 0
+endif
+
 autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
 autocmd Syntax extradite call s:ExtraditeSyntax()
@@ -69,7 +73,11 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   endif
 
   let git_cmd = fugitive#buffer().repo().git_command()
-  let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
+  if (g:extradite_showhash)
+    let cmd = a:template_cmd + ['--pretty=format:\%h	\%an	\%d	\%s', '--', path]
+  else
+    let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
+  endif
   let basecmd = call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo())
   let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
   let extradata_basecmd = call(fugitive#buffer().repo().git_command,extradata_cmd,fugitive#buffer().repo())
@@ -167,7 +175,13 @@ endfunction
 
 function! s:ExtraditeSyntax() abort
   let b:current_syntax = 'extradite'
-  syn match ExtraditeLogName "\(\w\| \)\+\t"
+  if (g:extradite_showhash)
+    syn match ExtraditeLogId "^\(\w\)\+"
+    syn match ExtraditeLogName "\t\(\w\| \)\+\t"
+    hi def link ExtraditeLogId Comment
+  else
+    syn match ExtraditeLogName "^\(\w\| \)\+\t"
+  endif
   syn match ExtraditeLogTag "(.*)\t"
   hi def link ExtraditeLogName String
   hi def link ExtraditeLogTag Identifier
@@ -234,6 +248,7 @@ function! s:SimpleDiff(git_cmd,a,b) abort
   setlocal ft=diff buftype=nofile nomodifiable
 
   let b:files = { 'a': a:a, 'b': a:b }
+  normal! zR
   keepjumps wincmd p
 
 endfunction
