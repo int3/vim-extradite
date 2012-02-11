@@ -243,7 +243,7 @@ function! s:SimpleDiff(git_cmd,a,b) abort
 
   setlocal modifiable
     silent! %delete _
-    let diff = system(a:git_cmd.' diff '.a:a.' '.a:b)
+    let diff = system(a:git_cmd.' diff --no-ext-diff '.a:a.' '.a:b)
     silent put = diff
   setlocal ft=diff buftype=nofile nomodifiable
 
