@@ -102,11 +102,13 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     edit
   else
     if a:bang
-      exe 'keepjumps leftabove vsplit '.log_file
+      exe 'keepjumps leftabove vnew'
     else
-      exe 'keepjumps edit' log_file
+      exe 'keepjumps enew'
     endif
   endif
+  setlocal nomodeline
+  exe 'edit '.log_file
 
   " this must happen after we create the Extradite buffer so that
   " b:extradata_list gets placed in the right buffer
