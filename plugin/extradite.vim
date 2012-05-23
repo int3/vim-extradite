@@ -18,6 +18,8 @@ endif
 
 autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
+nnoremap <silent> <Plug>ExtraditeClose  :<C-U>call <SID>ExtraditeClose()<CR>
+
 autocmd Syntax extradite call s:ExtraditeSyntax()
 let g:extradite_bufnr = -1
 
@@ -59,6 +61,7 @@ function! s:Extradite(bang) abort
     autocmd BufLeave <buffer>       hi! link Cursor NONE
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
+    doautocmd User Extradite
     return ''
   catch /^extradite:/
     return 'echoerr v:errmsg'
