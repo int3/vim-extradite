@@ -77,11 +77,11 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
 
   let git_cmd = fugitive#buffer().repo().git_command()
   if (g:extradite_showhash)
-    let cmd = a:template_cmd + ['--pretty=format:\%h	\%an	\%d	\%s', '--', path]
+    let cmd = a:template_cmd + ['--pretty=format:%h	%an	%d	%s', '--', path]
   else
-    let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
+    let cmd = a:template_cmd + ['--pretty=format:%an	%d	%s', '--', path]
   endif
-  let basecmd = call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo())
+  let basecmd = escape(call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo()), '%')
   let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
   let extradata_basecmd = call(fugitive#buffer().repo().git_command,extradata_cmd,fugitive#buffer().repo())
 
