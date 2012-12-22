@@ -61,7 +61,7 @@ function! s:Extradite(bang) abort
     autocmd BufLeave <buffer>       hi! link Cursor NONE
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
-    doautocmd User Extradite
+    silent doautocmd User Extradite
     return ''
   catch /^extradite:/
     return 'echoerr v:errmsg'
