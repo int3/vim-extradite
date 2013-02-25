@@ -18,6 +18,8 @@ endif
 
 autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
+nnoremap <silent> <Plug>ExtraditeClose  :<C-U>call <SID>ExtraditeClose()<CR>
+
 autocmd Syntax extradite call s:ExtraditeSyntax()
 let g:extradite_bufnr = -1
 
@@ -59,6 +61,7 @@ function! s:Extradite(bang) abort
     autocmd BufLeave <buffer>       hi! link Cursor NONE
     call s:ExtraditeDiffToggle()
     let g:extradite_bufnr = bufnr('')
+    silent doautocmd User Extradite
     return ''
   catch /^extradite:/
     return 'echoerr v:errmsg'
@@ -74,11 +77,11 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
 
   let git_cmd = fugitive#buffer().repo().git_command()
   if (g:extradite_showhash)
-    let cmd = a:template_cmd + ['--pretty=format:\%h	\%an	\%d	\%s', '--', path]
+    let cmd = a:template_cmd + ['--pretty=format:%h	%an	%d	%s', '--', path]
   else
-    let cmd = a:template_cmd + ['--pretty=format:\%an	\%d	\%s', '--', path]
+    let cmd = a:template_cmd + ['--pretty=format:%an	%d	%s', '--', path]
   endif
-  let basecmd = call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo())
+  let basecmd = escape(call(fugitive#buffer().repo().git_command,cmd,fugitive#buffer().repo()), '%')
   let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
   let extradata_basecmd = call(fugitive#buffer().repo().git_command,extradata_cmd,fugitive#buffer().repo())
 
@@ -99,11 +102,13 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     edit
   else
     if a:bang
-      exe 'keepjumps leftabove vsplit '.log_file
+      exe 'keepjumps leftabove vnew'
     else
-      exe 'keepjumps edit' log_file
+      exe 'keepjumps enew'
     endif
   endif
+  setlocal nomodeline
+  exe 'edit '.log_file
 
   " this must happen after we create the Extradite buffer so that
   " b:extradata_list gets placed in the right buffer
