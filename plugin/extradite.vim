@@ -106,6 +106,11 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     call add(extradata_list, {'commit': tokens[1], 'date': tokens[2]})
   endfor
 
+  if empty(extradata_list)
+    let v:errmsg = 'extradite: no log entries for the current file were found'
+    throw v:errmsg
+  endif
+
   if g:extradite_bufnr >= 0
     edit
   else
