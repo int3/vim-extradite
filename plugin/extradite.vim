@@ -98,6 +98,19 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     throw v:errmsg
   endif
 
+  let extradata_str = system(extradata_basecmd)
+  let extradata = split(extradata_str, '\n')
+  let extradata_list = []
+  for line in extradata
+    let tokens = matchlist(line, '\([^\t]\+\)\t\([^\t]\+\)')
+    call add(extradata_list, {'commit': tokens[1], 'date': tokens[2]})
+  endfor
+
+  if empty(extradata_list)
+    let v:errmsg = 'extradite: no log entries for the current file were found'
+    throw v:errmsg
+  endif
+
   if g:extradite_bufnr >= 0
     edit
   else
@@ -110,16 +123,8 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   setlocal nomodeline
   exe 'edit '.log_file
 
-  " this must happen after we create the Extradite buffer so that
-  " b:extradata_list gets placed in the right buffer
   let b:git_cmd = git_cmd
-  let extradata_str = system(extradata_basecmd)
-  let extradata = split(extradata_str, '\n')
-  let b:extradata_list = []
-  for line in extradata
-    let tokens = matchlist(line, '\([^\t]\+\)\t\([^\t]\+\)')
-    call add(b:extradata_list, {'commit': tokens[1], 'date': tokens[2]})
-  endfor
+  let b:extradata_list = extradata_list
 
   " Some components of the log may have no value. Or may insert whitespace of their own. Remove the repeated
   " whitespace that result from this. Side effect: removes intended whitespace in the commit data.
