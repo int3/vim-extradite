@@ -16,6 +16,10 @@ if !exists('g:extradite_showhash')
     let g:extradite_showhash = 0
 endif
 
+if !exists('g:extradite_diff_split')
+    let g:extradite_diff_split = 'belowright split'
+endif
+
 autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
 
 nnoremap <silent> <Plug>ExtraditeClose  :<C-U>call <SID>ExtraditeClose()<CR>
@@ -129,8 +133,8 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   " Some components of the log may have no value. Or may insert whitespace of their own. Remove the repeated
   " whitespace that result from this. Side effect: removes intended whitespace in the commit data.
   setlocal modifiable
-    silent! keepjumps %s/\(\s\)\s\+/\1/g
-    keepjumps normal! gg
+  silent! keepjumps %s/\(\s\)\s\+/\1/g
+  keepjumps normal! gg
   setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
 endfunction
 
@@ -232,7 +236,7 @@ endfunction
 function! s:SimpleDiff(git_cmd,a,b) abort
 
   if !exists('b:extradite_simplediff_bufnr') || b:extradite_simplediff_bufnr == -1
-    belowright split
+    exec g:extradite_diff_split
     enew!
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
