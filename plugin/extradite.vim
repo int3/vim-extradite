@@ -158,7 +158,7 @@ function! s:ExtraditeClose() abort
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
     exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
-  keepjumps bd
+  exe b:extradite_logged_bufnr.'buffer'
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
     exe 'keepjumps '.logged_winnr.'wincmd w'
