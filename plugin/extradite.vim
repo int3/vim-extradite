@@ -21,12 +21,11 @@ autocmd User Fugitive command! -buffer -bang Extradite :execute s:Extradite(<ban
 nnoremap <silent> <Plug>ExtraditeClose  :<C-U>call <SID>ExtraditeClose()<CR>
 
 autocmd Syntax extradite call s:ExtraditeSyntax()
-let g:extradite_bufnr = -1
 
 function! s:Extradite(bang) abort
 
   " if we are open, close.
-  if g:extradite_bufnr >= 0
+  if s:ExtraditeIsActiveInTab()
     call <SID>ExtraditeClose()
     return
   endif
@@ -60,7 +59,7 @@ function! s:Extradite(bang) abort
     autocmd BufLeave <buffer>       hi! link CursorLine NONE
     autocmd BufLeave <buffer>       hi! link Cursor NONE
     call s:ExtraditeDiffToggle()
-    let g:extradite_bufnr = bufnr('')
+    let t:extradite_bufnr = bufnr('')
     silent doautocmd User Extradite
     return ''
   catch /^extradite:/
@@ -111,7 +110,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
     throw v:errmsg
   endif
 
-  if g:extradite_bufnr >= 0
+  if s:ExtraditeIsActiveInTab()
     edit
   else
     if a:bang
@@ -147,8 +146,8 @@ endfunction
 " Closes the file log and returns the selected `commit:path`
 function! s:ExtraditeClose() abort
 
-  if (g:extradite_bufnr >= 0)
-    let filelog_winnr = bufwinnr(g:extradite_bufnr)
+  if s:ExtraditeIsActiveInTab()
+    let filelog_winnr = bufwinnr(t:extradite_bufnr)
     exe 'keepjumps '.filelog_winnr.'wincmd w'
   else
     return
@@ -159,13 +158,18 @@ function! s:ExtraditeClose() abort
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
     exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
-  keepjumps bd
+  exe b:extradite_logged_bufnr.'buffer'
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
     exe 'keepjumps '.logged_winnr.'wincmd w'
   endif
-  let g:extradite_bufnr = -1
+  let t:extradite_bufnr = -1
   return rev
+endfunction
+
+" Checks whether there is an Extradite buffer opened in the current tab page
+function! s:ExtraditeIsActiveInTab() abort
+  return exists('t:extradite_bufnr') && t:extradite_bufnr >= 0
 endfunction
 
 function! s:ExtraditeJump(cmd) abort
