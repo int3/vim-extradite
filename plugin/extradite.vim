@@ -119,8 +119,13 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
       exe 'keepjumps enew'
     endif
   endif
+
+  " There are some hardly predictable results related to 'modeline' option.
+  " Instead of just disabling the option also :read file and remove first
+  " (empty) line from original buffer instead of :editing the file.
   setlocal nomodeline
-  exe 'edit '.log_file
+  exe 'read' log_file
+  0delete
 
   let b:git_cmd = git_cmd
   let b:extradata_list = extradata_list
