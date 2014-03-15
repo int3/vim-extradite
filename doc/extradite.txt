@@ -16,6 +16,9 @@ COMMANDS                                        *extradite-commands*
                         current window. Adding |!| makes it open in a vertical
                         split instead. The width of the split is set with
                         *g:extradite_width*
+                        To not resize the split, set
+                        *g:extradite_resize*
+                        to 0 in your .vimrc
                         To show abbreviated commit hashes in the buffer, set
                         *g:extradite_showhash*
                         to 1 in your .vimrc

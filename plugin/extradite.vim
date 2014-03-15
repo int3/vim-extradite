@@ -12,6 +12,10 @@ if !exists('g:extradite_width')
     let g:extradite_width = 60
 endif
 
+if !exists('g:extradite_resize')
+    let g:extradite_resize = 1
+endif
+
 if !exists('g:extradite_showhash')
     let g:extradite_showhash = 0
 endif
@@ -41,7 +45,9 @@ function! s:Extradite(bang) abort
     let b:base_file_name = base_file_name
     let b:git_dir = git_dir
     let b:extradite_logged_bufnr = bufnr
-    exe 'vertical resize '.g:extradite_width
+    if g:extradite_resize
+        exe 'vertical resize '.g:extradite_width
+    endif
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     " invoke ExtraditeClose instead of bdelete so we can do the necessary cleanup
     nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
