@@ -175,6 +175,9 @@ function! s:ExtraditeClose() abort
   if t:extradite_switch_back
     exe b:extradite_logged_bufnr.'buffer'
   endif
+  if bufexists(t:extradite_bufnr)
+    exe 'keepjumps bd!' . t:extradite_bufnr
+  endif
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
     exe 'keepjumps '.logged_winnr.'wincmd w'
