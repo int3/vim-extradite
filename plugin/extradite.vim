@@ -181,7 +181,7 @@ endfunction
 
 " Checks whether there is an Extradite buffer opened in the current tab page
 function! s:ExtraditeIsActiveInTab() abort
-  return exists('t:extradite_bufnr') && t:extradite_bufnr >= 0
+  return exists('t:extradite_bufnr') && t:extradite_bufnr >= 0 && bufexists(t:extradite_bufnr)
 endfunction
 
 function! s:ExtraditeJump(cmd) abort
