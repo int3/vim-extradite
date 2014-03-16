@@ -158,12 +158,12 @@ endfunction
 " Closes the file log and returns the selected `commit:path`
 function! s:ExtraditeClose() abort
 
-  if s:ExtraditeIsActiveInTab()
-    let filelog_winnr = bufwinnr(t:extradite_bufnr)
-    exe 'keepjumps '.filelog_winnr.'wincmd w'
-  else
+  if !s:ExtraditeIsActiveInTab()
     return
   endif
+
+  let filelog_winnr = bufwinnr(t:extradite_bufnr)
+  exe 'keepjumps '.filelog_winnr.'wincmd w'
 
   let rev = s:ExtraditePath()
   let extradite_logged_bufnr = b:extradite_logged_bufnr
