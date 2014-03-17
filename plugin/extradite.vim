@@ -122,8 +122,10 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   else
     if a:bang
       exe 'keepjumps leftabove vnew'
+      let t:extradite_switch_back = 0
     else
       exe 'keepjumps enew'
+      let t:extradite_switch_back = 1
     endif
   endif
 
@@ -158,19 +160,24 @@ endfunction
 " Closes the file log and returns the selected `commit:path`
 function! s:ExtraditeClose() abort
 
-  if s:ExtraditeIsActiveInTab()
-    let filelog_winnr = bufwinnr(t:extradite_bufnr)
-    exe 'keepjumps '.filelog_winnr.'wincmd w'
-  else
+  if !s:ExtraditeIsActiveInTab()
     return
   endif
+
+  let filelog_winnr = bufwinnr(t:extradite_bufnr)
+  exe 'keepjumps '.filelog_winnr.'wincmd w'
 
   let rev = s:ExtraditePath()
   let extradite_logged_bufnr = b:extradite_logged_bufnr
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
     exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
-  exe b:extradite_logged_bufnr.'buffer'
+  if t:extradite_switch_back
+    exe b:extradite_logged_bufnr.'buffer'
+  endif
+  if bufexists(t:extradite_bufnr)
+    exe 'keepjumps bd!' . t:extradite_bufnr
+  endif
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
     exe 'keepjumps '.logged_winnr.'wincmd w'
@@ -181,7 +188,7 @@ endfunction
 
 " Checks whether there is an Extradite buffer opened in the current tab page
 function! s:ExtraditeIsActiveInTab() abort
-  return exists('t:extradite_bufnr') && t:extradite_bufnr >= 0
+  return exists('t:extradite_bufnr') && t:extradite_bufnr >= 0 && bufexists(t:extradite_bufnr)
 endfunction
 
 function! s:ExtraditeJump(cmd) abort
