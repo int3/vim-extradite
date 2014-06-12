@@ -22,6 +22,9 @@ COMMANDS                                        *extradite-commands*
                         To show abbreviated commit hashes in the buffer, set
                         *g:extradite_showhash*
                         to 1 in your .vimrc
+                        To use vertical split instead of horizontal one, set
+                        *g:extradite_diff_split*
+                        to 'belowright vertical split'.
 
 MAPPINGS                                        *extradite-mappings*
 
