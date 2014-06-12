@@ -214,10 +214,10 @@ function! s:ExtraditeSyntax() abort
   let b:current_syntax = 'extradite'
   if (g:extradite_showhash)
     syn match ExtraditeLogId "^\(\w\)\+"
-    syn match ExtraditeLogName "\t\(\w\| \)\+\t"
+    syn match ExtraditeLogName "\t[^\t]\+\t"
     hi def link ExtraditeLogId Comment
   else
-    syn match ExtraditeLogName "^\(\w\| \)\+\t"
+    syn match ExtraditeLogName "^[^\t]\+\t"
   endif
   syn match ExtraditeLogTag "(.*)\t"
   hi def link ExtraditeLogName String
