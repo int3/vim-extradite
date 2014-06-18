@@ -122,7 +122,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   endif
 
   if s:ExtraditeIsActiveInTab()
-    edit
+    silent! edit
   else
     if a:bang
       exe 'keepjumps leftabove vnew'
@@ -137,7 +137,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   " Instead of just disabling the option also :read file and remove first
   " (empty) line from original buffer instead of :editing the file.
   setlocal nomodeline
-  exe 'read' log_file
+  exe 'silent! read' log_file
   0delete
 
   let b:git_cmd = git_cmd
