@@ -148,7 +148,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   setlocal modifiable
   silent! keepjumps %s/\(\s\)\s\+/\1/g
   keepjumps normal! gg
-  setlocal nomodified nomodifiable bufhidden=wipe nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0
+  setlocal nomodified nomodifiable bufhidden=wipe nonumber nowrap foldcolumn=0 nofoldenable filetype=extradite ts=1 cursorline nobuflisted so=0 nolist
 endfunction
 
 " Returns the `commit:path` associated with the current line in the Extradite buffer
