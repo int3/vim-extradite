@@ -41,7 +41,6 @@ function! s:Extradite(bang) abort
   let path = fugitive#buffer().path()
   try
     let git_dir = fugitive#buffer().repo().dir()
-    " insert literal tabs in the format string because git does not seem to provide an escape code for it
     let template_cmd = ['--no-pager', 'log', '-n100', '--follow']
     let bufnr = bufnr('')
     let base_file_name = tempname()
@@ -86,6 +85,7 @@ function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abo
   endif
 
   let git_cmd = fugitive#buffer().repo().git_command()
+  " insert literal tabs in the format string because git does not seem to provide an escape code for it
   if (g:extradite_showhash)
     let cmd = a:template_cmd + ['--pretty=format:%h	%an	%d	%s', '--', path]
   else
