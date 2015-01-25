@@ -174,13 +174,13 @@ function! s:ExtraditeClose() abort
   let rev = s:ExtraditePath()
   let extradite_logged_bufnr = b:extradite_logged_bufnr
   if exists('b:extradite_simplediff_bufnr') && bufwinnr(b:extradite_simplediff_bufnr) >= 0
-    exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
+    silent exe 'keepjumps bd!' . b:extradite_simplediff_bufnr
   endif
   if t:extradite_switch_back
     exe b:extradite_logged_bufnr.'buffer'
   endif
   if bufexists(t:extradite_bufnr)
-    exe 'keepjumps bd!' . t:extradite_bufnr
+    silent exe 'keepjumps bd!' . t:extradite_bufnr
   endif
   let logged_winnr = bufwinnr(extradite_logged_bufnr)
   if logged_winnr >= 0
