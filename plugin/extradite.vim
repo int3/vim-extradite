@@ -68,6 +68,9 @@ function! s:Extradite(bang) abort
     autocmd BufEnter <buffer>       call s:ExtraditeSyntax()
     autocmd BufLeave <buffer>       hi! link CursorLine NONE
     autocmd BufLeave <buffer>       hi! link Cursor NONE
+    " airline overwrites 'statusline' option for this window, request it to be
+    " disabled
+    let w:airline_disabled = 1
     call s:ExtraditeDiffToggle()
     let t:extradite_bufnr = bufnr('')
     silent doautocmd User Extradite
@@ -265,6 +268,9 @@ function! s:SimpleDiff(git_cmd,a,b) abort
   if !exists('b:extradite_simplediff_bufnr') || b:extradite_simplediff_bufnr == -1
     exec g:extradite_diff_split
     enew!
+    " airline causes strange effects related to status line on window change,
+    " this doesn't even disable it, but fixes the effects
+    let w:airline_disabled = 1
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
     let bufnr = bufnr('')
