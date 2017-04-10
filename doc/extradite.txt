@@ -46,7 +46,7 @@ dh, dv, dt              Diff the current file against the revision under the
 t                       Toggle the visibility of the file diff buffer.
 
                                                 *extradite-q*
-q                       Close the Extradite buffer.
+q, <C-c>                Close the Extradite buffer.
 
 ABOUT                                           *extradite-about*
 

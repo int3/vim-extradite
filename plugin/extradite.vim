@@ -54,6 +54,7 @@ function! s:Extradite(bang) abort
     command! -buffer -bang Extradite :execute s:Extradite(<bang>0)
     " invoke ExtraditeClose instead of bdelete so we can do the necessary cleanup
     nnoremap <buffer> <silent> q    :<C-U>call <SID>ExtraditeClose()<CR>
+    nnoremap <buffer> <silent> <C-c> :<C-U>call <SID>ExtraditeClose()<CR>
     nnoremap <buffer> <silent> <CR> :<C-U>exe <SID>ExtraditeJump("edit")<CR>
     nnoremap <buffer> <silent> ov   :<C-U>exe <SID>ExtraditeJump((&splitbelow ? "botright" : "topleft")." vsplit")<CR>
     nnoremap <buffer> <silent> oh   :<C-U>exe <SID>ExtraditeJump((&splitbelow ? "botright" : "topleft")." split")<CR>
