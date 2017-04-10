@@ -44,7 +44,10 @@ function! s:Extradite(bang) abort
     let template_cmd = ['--no-pager', 'log', '-n100', '--follow']
     let bufnr = bufnr('')
     let base_file_name = tempname()
+    let s:save_modeline = &modeline
+    set nomodeline
     call s:ExtraditeLoadCommitData(a:bang, base_file_name, template_cmd, path)
+    let &modeline = s:save_modeline
     let b:base_file_name = base_file_name
     let b:git_dir = git_dir
     let b:extradite_logged_bufnr = bufnr
