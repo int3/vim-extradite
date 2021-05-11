@@ -190,6 +190,10 @@ function! s:ExtraditeClose() abort
     exe 'keepjumps '.logged_winnr.'wincmd w'
   endif
   let t:extradite_bufnr = -1
+
+  " enable airline back on close
+  let w:airline_disabled = 0
+
   return rev
 endfunction
 
