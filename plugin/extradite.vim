@@ -38,13 +38,12 @@ function! s:Extradite(bang) abort
     return
   endif
 
-  let path = FugitivePath(@%, "")
   try
     let git_dir = fugitive#repo().dir()
     let template_cmd = ['--no-pager', 'log', '-n100', '--follow']
     let bufnr = bufnr('')
     let base_file_name = tempname()
-    call s:ExtraditeLoadCommitData(a:bang, base_file_name, template_cmd, path)
+    call s:ExtraditeLoadCommitData(a:bang, base_file_name, template_cmd)
     let b:base_file_name = base_file_name
     let b:git_dir = git_dir
     let b:extradite_logged_bufnr = bufnr
@@ -80,23 +79,19 @@ function! s:Extradite(bang) abort
   endtry
 endfunction
 
-function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd, ...) abort
-  if a:0 >= 1
-    let path = a:1
-  else
-    let path = ''
-  endif
+function! s:ExtraditeLoadCommitData(bang, base_file_name, template_cmd)
+  let path = @%
 
-  let git_cmd = fugitive#repo().git_command()
+  let git_cmd = FugitiveShellCommand()
   " insert literal tabs in the format string because git does not seem to provide an escape code for it
   if (g:extradite_showhash)
     let cmd = a:template_cmd + ['--pretty=format:%h	%an	%d	%s', '--', path]
   else
     let cmd = a:template_cmd + ['--pretty=format:%an	%d	%s', '--', path]
   endif
-  let basecmd = escape(call(fugitive#repo().git_command,cmd,fugitive#repo()), '%')
+  let basecmd = escape(FugitiveShellCommand(cmd,fugitive#repo()), '%')
   let extradata_cmd = a:template_cmd + ['--pretty=format:%h	%ad', '--', path]
-  let extradata_basecmd = call(fugitive#repo().git_command,extradata_cmd,fugitive#repo())
+  let extradata_basecmd = FugitiveShellCommand(extradata_cmd,fugitive#repo())
 
   let log_file = a:base_file_name.'.extradite'
   " put the commit IDs in a separate file -- the user doesn't have to know
